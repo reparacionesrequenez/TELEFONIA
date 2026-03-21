@@ -1,24 +1,52 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+
+define("FIREBASE_URL", "https://console.firebase.google.com/u/0/project/telefonia-d8f6d/database/telefonia-d8f6d-default-rtdb/data/~2F");
+
+// función para GET
+function firebase_get($path) {
+    $url = FIREBASE_URL . $path . ".json";
+    return json_decode(file_get_contents($url), true);
 }
 
-$host = $_ENV['DB_HOST'] ?? 'localhost';
-$user = $_ENV['DB_USER'] ?? 'root';
-$pass = $_ENV['DB_PASS'] ?? '';
-$name = $_ENV['DB_NAME'] ?? 'bd_reparaciones_requenez';
+// función para POST (crear)
+function firebase_post($path, $data) {
+    $url = FIREBASE_URL . $path . ".json";
 
-if (!in_array($_SERVER['HTTP_HOST'] ?? 'localhost', ['localhost', '127.0.0.1'], true)) {
-    $host = $_ENV['DB_HOST'] ?? $host;
-    $user = $_ENV['DB_USER'] ?? $user;
-    $pass = $_ENV['DB_PASS'] ?? $pass;
-    $name = $_ENV['DB_NAME'] ?? $name;
+    $options = [
+        "http" => [
+            "method"  => "POST",
+            "header"  => "Content-Type: application/json",
+            "content" => json_encode($data)
+        ]
+    ];
+
+    return json_decode(file_get_contents($url, false, stream_context_create($options)), true);
 }
 
-$conn = new mysqli($host, $user, $pass, $name);
+// función para PUT (editar)
+function firebase_put($path, $data) {
+    $url = FIREBASE_URL . $path . ".json";
 
-if ($conn->connect_error) {
-    die('Error de conexión a la base de datos: ' . $conn->connect_error);
+    $options = [
+        "http" => [
+            "method"  => "PUT",
+            "header"  => "Content-Type: application/json",
+            "content" => json_encode($data)
+        ]
+    ];
+
+    return json_decode(file_get_contents($url, false, stream_context_create($options)), true);
 }
 
-$conn->set_charset('utf8mb4');
+
+function firebase_delete($path) {
+    $url = FIREBASE_URL . $path . ".json";
+
+    $options = [
+        "http" => [
+            "method" => "DELETE"
+        ]
+    ];
+
+    return file_get_contents($url, false, stream_context_create($options));
+}
