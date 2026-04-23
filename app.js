@@ -3,8 +3,10 @@ import { auth, db } from "./firebase-config.js";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 import {
   collection,
@@ -189,5 +191,44 @@ if (tablaEquipos) {
       alert("Debes iniciar sesión");
       window.location.href = "login.html";
     }
+  });
+}
+
+const authButtons = document.getElementById("authButtons");
+const userPanel = document.getElementById("userPanel");
+const nombreUsuario = document.getElementById("nombreUsuario");
+const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+
+if (authButtons && userPanel) {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      authButtons.classList.add("d-none");
+      userPanel.classList.remove("d-none");
+
+      let nombre = user.email;
+
+      try {
+        const usuarioRef = doc(db, "usuarios", user.uid);
+        const usuarioSnap = await getDoc(usuarioRef);
+
+        if (usuarioSnap.exists()) {
+          nombre = usuarioSnap.data().nombre || user.email;
+        }
+      } catch (error) {
+        console.log("No se pudo obtener el nombre:", error);
+      }
+
+      nombreUsuario.textContent = "Hola, " + nombre;
+    } else {
+      authButtons.classList.remove("d-none");
+      userPanel.classList.add("d-none");
+    }
+  });
+}
+
+if (btnCerrarSesion) {
+  btnCerrarSesion.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
   });
 }
