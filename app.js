@@ -1,8 +1,9 @@
 import { auth, db } from "./firebase-config.js";
+
 import {
   signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
@@ -12,7 +13,8 @@ import {
   doc,
   deleteDoc,
   getDoc,
-  updateDoc
+  updateDoc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // LOGIN
@@ -22,8 +24,8 @@ if (formLogin) {
   formLogin.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const correo = document.getElementById("correo")?.value;
-    const password = document.getElementById("password")?.value;
+    const correo = document.getElementById("correo").value;
+    const password = document.getElementById("password").value;
 
     try {
       await signInWithEmailAndPassword(auth, correo, password);
@@ -31,6 +33,35 @@ if (formLogin) {
       window.location.href = "equipos.html";
     } catch (error) {
       alert("Error al iniciar sesión: " + error.message);
+      console.error(error);
+    }
+  });
+}
+
+// REGISTRO
+const formRegistro = document.getElementById("formRegistro");
+
+if (formRegistro) {
+  formRegistro.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombreRegistro").value;
+    const correo = document.getElementById("correoRegistro").value;
+    const password = document.getElementById("passwordRegistro").value;
+
+    try {
+      const credencial = await createUserWithEmailAndPassword(auth, correo, password);
+
+      await setDoc(doc(db, "usuarios", credencial.user.uid), {
+        nombre: nombre,
+        correo: correo,
+        rol: "usuario"
+      });
+
+      alert("Cuenta creada correctamente");
+      window.location.href = "equipos.html";
+    } catch (error) {
+      alert("Error al registrarse: " + error.message);
       console.error(error);
     }
   });
