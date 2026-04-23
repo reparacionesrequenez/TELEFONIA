@@ -148,16 +148,17 @@
     <div class="overlay"></div>
  
   
-   <div class="login-trigger">Iniciar Sesión</div>
-    <div class="login-container">
-        <h3>Iniciar Sesión</h3>
-        <form action="login.php" method="post">
-            <input type="text" name="usuario" class="form-control mb-2" placeholder="Usuario" required>
-            <input type="password" name="contrasena" class="form-control mb-2" placeholder="Contraseña" required>
-            <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-        </form>
-    </div>
+<div class="login-trigger">Iniciar Sesión</div>
+<div class="login-container">
+    <h3>Iniciar Sesión</h3>
 
+    <form id="formLogin">
+        <input type="email" id="correo" class="form-control mb-2" placeholder="Correo" required>
+        <input type="password" id="password" class="form-control mb-2" placeholder="Contraseña" required>
+        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+    </form>
+
+</div>
     <div class="container text-center">
         <h2>Bienvenidos a Servicio de Reparaciones Requenez</h2>
         <p>Desde hace más de 10 años, en Servicio de Reparaciones Requenez nos especializamos en brindarte soluciones rápidas y efectivas para tus dispositivos electrónicos. Todo comenzó con una pequeña mesa de trabajo, y gracias a la confianza de nuestros clientes, hoy somos un negocio establecido con una reputación impecable en Platón Sánchez.</p>
@@ -167,7 +168,7 @@
 
         <img src="Logo.png" alt="Logotipo" class="logo"> 
     
-        <a href="equipos.php" class="btn-equipos">Ver Equipos</a>
+        <a href="equipos.html" class="btn-equipos">Ver Equipos</a>
 
     </div>
     
@@ -340,5 +341,6 @@
         document.getElementById("year").innerText = new Date().getFullYear();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
